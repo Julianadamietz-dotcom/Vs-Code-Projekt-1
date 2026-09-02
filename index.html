@@ -1,0 +1,353 @@
+<!doctype html>
+<!--
+  ============================================================
+  DEINE PORTFOLIO-SEITE  –  alles in einer Datei
+  ============================================================
+  Diese Datei hat drei Teile:
+    1. Der <head>  -> Einstellungen & CSS (das Aussehen)
+    2. Der <body>  -> HTML (der sichtbare Inhalt)
+    3. Das <script> ganz unten -> JavaScript (die Interaktion)
+
+  Suche im Code nach dem Wort  ÄNDERN:  – dort passt du die Seite
+  an dich an. Fang damit an, dann verstehst du den Rest von selbst.
+
+  NEU: Projekte hinzufügen
+  ------------------------
+  Weiter unten im <script>-Teil gibt es jetzt eine Liste namens
+  "projekte". Statt für jedes Projekt einen eigenen HTML-Block zu
+  kopieren, trägst du dort einfach einen neuen Eintrag ein:
+
+    { titel: "...", beschreibung: "...", link: "...", datei: "..." }
+
+  - link: eine externe URL (z.B. GitHub-Repo, Live-Demo) oder "#"
+  - datei: optional. Pfad zu einer Datei (PDF, Bild, ZIP, ...), die
+    du in einen Unterordner neben diese index.html legst, z.B.
+    "dateien/mein-screenshot.png". Lass es weg (null), wenn es
+    keine Datei zum Herunterladen gibt.
+
+  Ordnerstruktur-Beispiel:
+    meine-seite/
+      index.html
+      dateien/
+        mein-screenshot.png
+        projekt-doku.pdf
+-->
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <!-- Sorgt dafür, dass die Seite auf dem Handy richtig skaliert -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- ÄNDERN: Das steht oben im Browser-Tab -->
+    <title>Julian – Portfolio</title>
+
+    <!-- Wir laden eine Schriftart von Google für die Überschriften -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      /*
+      -------- FARBEN AN EINER STELLE --------
+      Diese "Variablen" definieren wir einmal und benutzen sie überall.
+      Willst du die Seite umfärben, änderst du nur diese Werte.
+    */
+      :root {
+        --bg: #f7f5f0c2; /* Hintergrund (warmes Weiß)      */
+        --text: #171615; /* Textfarbe (fast schwarz)       */
+        --muted: #6b6862; /* gedämpfter Text (Nebeninfos)   */
+        --accent: #e60d0d; /* ÄNDERN: deine Akzentfarbe      */
+        --card: #f6f5f5; /* Hintergrund der Projektkarten  */
+        --border: #2c2b2b; /* dünne Linien                   */
+      }
+
+      /*
+      Der Dark-Mode: Wenn am <body> die Klasse "dark" hängt,
+      gelten DIESE Farben statt der oberen. Mehr Code braucht
+      der Dark-Mode nicht – nur andere Werte für dieselben Variablen.
+    */
+      body.dark {
+        --bg: #16151a;
+        --text: #ecebe8;
+        --muted: #9a978f;
+        --accent: #4fd1a5;
+        --card: #22212a;
+        --border: #33313c;
+      }
+
+      /* Grund-Aufräumen: Standardabstände des Browsers entfernen */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        background: var(--bg);
+        color: var(--text);
+        font-family:
+          system-ui,
+          -apple-system,
+          "Segoe UI",
+          sans-serif;
+        line-height: 1.6;
+        /* der weiche Übergang beim Umschalten von Hell/Dunkel */
+        transition:
+          background 0.3s ease,
+          color 0.3s ease;
+      }
+
+      /* Ein zentrierter Bereich, damit Text nicht bildschirmbreit läuft */
+      .wrap {
+        max-width: 680px;
+        margin: 0 auto;
+        padding: 0 24px;
+      }
+
+      /* -------- Kopfzeile mit Umschalt-Knopf -------- */
+      header {
+        display: flex;
+        justify-content: flex-end;
+        padding: 20px 0;
+      }
+      .toggle {
+        background: var(--card);
+        border: 1px solid var(--border);
+        color: var(--text);
+        padding: 8px 14px;
+        border-radius: 999px;
+        cursor: pointer;
+        font-size: 14px;
+      }
+      .toggle:hover {
+        border-color: var(--accent);
+      }
+
+      /* -------- Der obere "Hero"-Bereich -------- */
+      .hero {
+        padding: 40px 0 56px;
+      }
+      .hero h1 {
+        font-family: "Fraunces", serif; /* die geladene Schrift */
+        font-size: clamp(2.4rem, 8vw, 3.6rem); /* wächst mit dem Bildschirm */
+        font-weight: 600;
+        line-height: 1.1;
+        letter-spacing: -0.01em;
+      }
+      .hero .tagline {
+        color: var(--accent);
+        font-size: 1.1rem;
+        margin-top: 12px;
+      }
+      .hero p {
+        color: var(--muted);
+        margin-top: 20px;
+        max-width: 46ch; /* begrenzt die Zeilenlänge auf ~46 Zeichen */
+      }
+
+      /* -------- Abschnitts-Überschriften -------- */
+      section {
+        padding: 32px 0;
+      }
+      section h2 {
+        font-family: "Fraunces", serif;
+        font-size: 1.4rem;
+        margin-bottom: 20px;
+      }
+
+      /* -------- Projekt-Karten -------- */
+      .project {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 20px 22px;
+        margin-bottom: 14px;
+      }
+      .project h3 {
+        font-size: 1.05rem;
+        margin-bottom: 6px;
+      }
+      .project p {
+        color: var(--muted);
+        font-size: 0.95rem;
+      }
+      .project a {
+        color: var(--accent);
+        text-decoration: none;
+        font-size: 0.9rem;
+        display: inline-block;
+        margin-top: 10px;
+        margin-right: 16px;
+      }
+      .project a:hover {
+        text-decoration: underline;
+      }
+
+      /* -------- Kontakt & Fußzeile -------- */
+      .contact a {
+        color: var(--accent);
+        font-size: 1.05rem;
+      }
+      footer {
+        color: var(--muted);
+        font-size: 0.85rem;
+        padding: 48px 0 32px;
+        border-top: 1px solid var(--border);
+        margin-top: 24px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="wrap">
+      <!-- Kopfzeile: enthält nur den Umschalt-Knopf.
+         onclick ruft die JavaScript-Funktion unten auf. -->
+      <header>
+        <button class="toggle" onclick="darkModeUmschalten()">
+          🌙 Dark Mode
+        </button>
+      </header>
+
+      <!-- ================= HERO ================= -->
+      <div class="hero">
+        <!-- ÄNDERN: dein Name -->
+        <h1>Hallo, mein Name ist Julian Adamietz.</h1>
+        <!-- ÄNDERN: ein Satz, was du machst -->
+        <p class="tagline">Ich bin ein erfolgreicher Startup founder .</p>
+        <p>
+          Ich bin ein 15jähriger Startup Gründer .Ich möchte groß rauskommen.
+          Wenn das nicht gut fumktioniert werde ich IB in Frankfurt.
+        </p>
+
+        <p>
+          Willkommen auf meiner Seite. Hier sammle ich, was ich gerade lerne und
+          baue. Nimm dir einen Moment und schau dich um.
+        </p>
+      </div>
+
+      <!-- ================= ÜBER MICH ================= -->
+      <section>
+        <h2>Über mich</h2>
+        <!-- ÄNDERN: erzähl kurz, wer du bist und was dich interessiert -->
+        <p>
+          Ich beschäftige mich mit Webentwicklung, Automatisierung und KI. Diese
+          Seite ist mein erstes Projekt – sie wächst mit dem, was ich dazulerne.
+        </p>
+      </section>
+
+      <!-- ================= PROJEKTE ================= -->
+      <section>
+        <h2>Projekte</h2>
+
+        <!--
+          NEU: Hier steht kein festes HTML mehr pro Projekt.
+          Der leere Container wird per JavaScript automatisch mit den
+          Projekten aus der Liste "projekte" (siehe <script> unten) gefüllt.
+          Zum Hinzufügen eines Projekts musst du hier nichts mehr ändern –
+          nur unten in der Liste "projekte" einen Eintrag ergänzen.
+        -->
+        <div id="projekt-liste"></div>
+      </section>
+
+      <!-- ================= KONTAKT ================= -->
+      <section class="contact">
+        <h2>Kontakt</h2>
+        <!-- ÄNDERN: deine E-Mail. Das "mailto:" öffnet das Mailprogramm. -->
+        <p><a href="mailto:deine@email.de">deine@email.de</a></p>
+      </section>
+
+      <footer>
+        <!-- ÄNDERN: Jahr und Name -->
+        © 2026 Julian
+      </footer>
+    </div>
+
+    <!-- ================= JAVASCRIPT ================= -->
+    <script>
+      /*
+      Das ist die ganze Interaktion der Seite: eine Funktion, die
+      am <body> die Klasse "dark" an- und ausschaltet. Sobald "dark"
+      gesetzt ist, greifen die dunklen Farben aus dem CSS oben.
+    */
+      function darkModeUmschalten() {
+        // "toggle" heißt: ist die Klasse da, entfernen; sonst hinzufügen.
+        const istDunkel = document.body.classList.toggle("dark");
+
+        // Passt die Knopf-Beschriftung an den aktuellen Zustand an:
+        const knopf = document.querySelector(".toggle");
+        knopf.textContent = istDunkel ? "☀️ Light Mode" : "🌙 Dark Mode";
+      }
+
+      /*
+      ============================================================
+      PROJEKTE  –  ÄNDERN: hier trägst du jedes Projekt ein
+      ============================================================
+      Jedes Projekt ist ein Objekt mit vier Feldern:
+
+        titel        -> Name des Projekts
+        beschreibung -> kurzer Text dazu
+        link         -> externe URL (GitHub, Live-Demo, ...) oder "#"
+        datei        -> Pfad zu einer Datei zum Herunterladen (optional).
+                        Lege die Datei dazu in einen Unterordner neben
+                        deiner index.html, z.B. "dateien/screenshot.png",
+                        und trage hier den Pfad ein. Kein Datei? -> null
+
+      Ein neues Projekt hinzufügen = einfach ein weiteres { ... }
+      -Objekt in die eckigen Klammern einfügen (mit Komma getrennt).
+    */
+      const projekte = [
+        {
+          titel: "Diese Portfolio-Seite",
+          beschreibung: "Mein erstes Projekt mit HTML, CSS und JavaScript.",
+          link: "#",
+          datei: null
+        },
+        {
+          titel: "Nächstes Projekt",
+          beschreibung: "Kommt bald – hier trage ich mein nächstes Vorhaben ein.",
+          link: "#",
+          datei: null
+        }
+        // ÄNDERN: hier weitere Projekte ergänzen, z.B.:
+        // {
+        //   titel: "Mein n8n-Automatisierungs-Projekt",
+        //   beschreibung: "Ein täglicher News-Digest per E-Mail.",
+        //   link: "https://github.com/dein-name/dein-repo",
+        //   datei: "dateien/ablaufdiagramm.png"
+        // }
+      ];
+
+      /*
+      Baut aus der Liste "projekte" automatisch die HTML-Karten und
+      setzt sie in den Container mit der id "projekt-liste" ein.
+    */
+      function projekteRendern() {
+        const container = document.getElementById("projekt-liste");
+
+        container.innerHTML = projekte
+          .map((p) => {
+            // Der Datei-Link wird nur gebaut, wenn "datei" gesetzt ist.
+            const dateiLink = p.datei
+              ? `<a href="${p.datei}" download>📄 Datei herunterladen</a>`
+              : "";
+
+            return `
+              <div class="project">
+                <h3>${p.titel}</h3>
+                <p>${p.beschreibung}</p>
+                <a href="${p.link}">Ansehen →</a>
+                ${dateiLink}
+              </div>
+            `;
+          })
+          .join("");
+      }
+
+      // Direkt beim Laden der Seite einmal ausführen:
+      projekteRendern();
+    </script>
+  </body>
+</html>
